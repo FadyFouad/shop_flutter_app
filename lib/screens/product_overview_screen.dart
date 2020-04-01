@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopflutterapp/models/product.dart';
 import 'package:shopflutterapp/providers/products.dart';
 import 'package:shopflutterapp/widgets/product_widget.dart';
 
@@ -28,7 +27,6 @@ class ProductOverViewScreen extends StatelessWidget {
 }
 
 class ProductGridView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
