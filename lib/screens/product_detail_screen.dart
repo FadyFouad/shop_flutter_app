@@ -11,9 +11,9 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String id = ModalRoute.of(context).settings.arguments as String ;
-    final products = Provider.of<Products>(context).productList;
-    final selectedProduct = products.firstWhere((product) => id == product.id);
+    String id = ModalRoute.of(context).settings.arguments as String;
+    final products = Provider.of<Products>(context, listen: false);
+    final selectedProduct = products.getProduct(id);
     return ChangeNotifierProvider(
       create: (BuildContext context) {
         return Products();
