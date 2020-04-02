@@ -8,12 +8,6 @@ import 'package:shopflutterapp/screens/product_detail_screen.dart';
 ///****************************************************
 
 class ProductItem extends StatelessWidget {
-//  final String id;
-//  final String name;
-//  final String imageUrl;
-
-//  const ProductItem({Key key, this.id, this.name, this.imageUrl})
-//      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +32,7 @@ class ProductItem extends StatelessWidget {
           footer: GridTileBar(
             leading: IconButton(
               icon: Icon(
-                product.isFav ? Icons.favorite_border : Icons.favorite,
+                product.isFav ? Icons.favorite : Icons.favorite_border,
                 color: Theme.of(context).accentColor,
               ),
               onPressed: () {

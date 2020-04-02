@@ -8,43 +8,83 @@ import 'package:shopflutterapp/widgets/product_widget.dart';
 ///*** Created by Fady Fouad on 26-Mar-20 at 17:03.***
 ///****************************************************
 
-class ProductOverViewScreen extends StatelessWidget {
+class ProductOverViewScreen extends StatefulWidget {
   final String title;
 
   ProductOverViewScreen({Key key, this.title}) : super(key: key);
 
   @override
+  _ProductOverViewScreenState createState() => _ProductOverViewScreenState();
+}
+
+class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
+  var _showOnlyFavorites = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favorites) {
+                  _showOnlyFavorites = true;
+                } else {
+                  _showOnlyFavorites = false;
+                }
+              });
+            },
+            icon: Icon(
+              Icons.more_vert,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Only Favorites'),
+                value: FilterOptions.Favorites,
+              ),
+              PopupMenuItem(
+                child: Text('Show All'),
+                value: FilterOptions.All,
+              ),
+            ],
+          ),
+        ],
       ),
       body: Container(
-        child: ProductGridView(),
+        child: ProductGridView(
+          isFav: _showOnlyFavorites,
+        ),
       ),
     );
   }
 }
 
 class ProductGridView extends StatelessWidget {
+  final bool isFav;
+
+  const ProductGridView({Key key, this.isFav}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
-    final products = productData.productList;
+    final products =
+        isFav ? productData.favProductList : productData.productList;
     return GridView.builder(
       padding: const EdgeInsets.all(8.0),
       itemBuilder: (BuildContext context, int index) {
-        return ChangeNotifierProvider(
-          create: (BuildContext context) {
-            return Products();
-          },
-          child: ProductItem(
-//            id: products[index].id,
-//            name: products[index].name,
-//            imageUrl: products[index].imageUrl,
-          ),
+        return ChangeNotifierProvider.value(
+          value: products[index],
+          child: ProductItem(),
         );
       },
+//    itemBuilder: (BuildContext context, int index) {
+//    return ChangeNotifierProvider(
+//    create: (BuildContext context) {
+//    return products[index];
+//    },
+//    child: ProductItem(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,
@@ -53,4 +93,9 @@ class ProductGridView extends StatelessWidget {
       itemCount: products.length,
     );
   }
+}
+
+enum FilterOptions {
+  Favorites,
+  All,
 }

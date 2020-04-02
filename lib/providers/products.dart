@@ -43,8 +43,11 @@ class Products with ChangeNotifier {
 
   List<Product> get productList => [..._productList];
 
+  List<Product> get favProductList =>
+      _productList.where((product) => product.isFav).toList();
+
   void addProduct(Product product) {
-    _productList.add(product);
+    productList.add(product);
     notifyListeners();
   }
 
