@@ -79,12 +79,6 @@ class ProductGridView extends StatelessWidget {
           child: ProductItem(),
         );
       },
-//    itemBuilder: (BuildContext context, int index) {
-//    return ChangeNotifierProvider(
-//    create: (BuildContext context) {
-//    return products[index];
-//    },
-//    child: ProductItem(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,
