@@ -50,6 +50,10 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
               ),
             ],
           ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.shopping_cart),
+          ),
         ],
       ),
       body: Container(
