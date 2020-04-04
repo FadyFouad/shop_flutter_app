@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopflutterapp/providers/cart.dart';
+import 'package:shopflutterapp/providers/orders.dart';
+import 'package:shopflutterapp/screens/orders_screen.dart';
 import 'package:shopflutterapp/widgets/cart_widget.dart';
 
 ///****************************************************
@@ -14,6 +16,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final myCart = Provider.of<Cart>(context);
+    final orders = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart'),
@@ -45,7 +48,13 @@ class CartScreen extends StatelessWidget {
                     FlatButton(
                       child: Text('Order Now'),
                       textColor: Theme.of(context).accentColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        orders.addOrder(
+                            myCart.cartItems.values.toList(),
+                            myCart.getTotalMoney);
+                        Navigator.of(context).pushNamed(OrderScreen.routeName);
+                        myCart.clearCart();
+                      },
                     ),
                   ],
                 ),

@@ -30,9 +30,22 @@ class CartWidget extends StatelessWidget {
         },
         background: Container(
           color: Theme.of(context).errorColor,
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+              Text(
+                " Delete",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.right,
+              ),
+            ],
           ),
           alignment: Alignment.centerRight,
           padding: EdgeInsets.all(8.0),
