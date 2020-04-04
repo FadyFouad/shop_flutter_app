@@ -46,10 +46,11 @@ class CartWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
               leading: CircleAvatar(
-                child: FittedBox(child: Text('\$ ${price}')),
+                child: FittedBox(child: Text('\$ ${price.toStringAsFixed(2)}')),
               ),
               title: Text(name),
-              subtitle: Text('Total ${price * quantity} \$'),
+              subtitle: Text(
+                  'Total ${(price * quantity).toStringAsFixed(2)} \$'),
               trailing: Text('Quantity = ${quantity}'),
             ),
           ),
