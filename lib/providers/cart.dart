@@ -18,30 +18,35 @@ class Cart with ChangeNotifier {
     });
     return amount;
   }
+
   void addToCart(String id, String title, double price) {
     if (_cartItems.containsKey(id)) {
       _cartItems.update(
         id,
-        (value) => CartItem(
-            id: value.id,
-            title: value.title,
-            quantity: value.quantity + 1,
-            price: value.price),
+            (value) =>
+            CartItem(
+                id: value.id,
+                title: value.title,
+                quantity: value.quantity + 1,
+                price: value.price),
       );
     } else {
       _cartItems.putIfAbsent(
         id,
-        () => CartItem(
-            id: DateTime.now().toString(),
-            title: title,
-            quantity: 1,
-            price: price),
+            () =>
+            CartItem(
+                id: DateTime.now().toString(),
+                title: title,
+                quantity: 1,
+                price: price),
       );
     }
     notifyListeners();
   }
 
   void deleteItem(String id) {
+    //Todo remove 1 item
+
     _cartItems.remove(id);
     notifyListeners();
   }
@@ -53,9 +58,8 @@ class CartItem {
   final int quantity;
   final double price;
 
-  CartItem(
-      {@required this.id,
-      @required this.title,
-      @required this.quantity,
-      @required this.price});
+  CartItem({@required this.id,
+    @required this.title,
+    @required this.quantity,
+    @required this.price});
 }

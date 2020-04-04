@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopflutterapp/providers/cart.dart';
 
 ///****************************************************
 ///*** Created by Fady Fouad on 04-Apr-20 at 01:25.***
@@ -7,20 +9,25 @@ import 'package:flutter/material.dart';
 
 class CartWidget extends StatelessWidget {
   final String id;
+  final String productID;
   final String name;
   final double price;
   final int quantity;
 
-  const CartWidget({Key key, this.id, this.name, this.price, this.quantity})
+  const CartWidget(
+      {Key key, this.id, this.name, this.price, this.quantity, this.productID})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<Cart>(context);
     return Container(
       child: Dismissible(
-        key: ValueKey(id),
+        key: ValueKey(productID),
         direction: DismissDirection.endToStart,
-        onDismissed: (direction) {},
+        onDismissed: (direction) {
+          cart.deleteItem(productID);
+        },
         background: Container(
           color: Theme.of(context).errorColor,
           child: Icon(
