@@ -5,10 +5,19 @@ import 'package:flutter/material.dart';
 ///****************************************************
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _cartItems;
+  Map<String, CartItem> _cartItems = {};
 
   Map<String, CartItem> get cartItems => {..._cartItems};
 
+  int get getItemCount => _cartItems == null ? 0 : _cartItems.length;
+
+  double get getTotalMoney {
+    double amount = 0.0;
+    _cartItems.forEach((key, value) {
+      amount += value.price * value.quantity;
+    });
+    return amount;
+  }
   void addToCart(String id, String title, double price) {
     if (_cartItems.containsKey(id)) {
       _cartItems.update(
@@ -29,6 +38,12 @@ class Cart with ChangeNotifier {
             price: price),
       );
     }
+    notifyListeners();
+  }
+
+  void deleteItem(String id) {
+    _cartItems.remove(id);
+    notifyListeners();
   }
 }
 

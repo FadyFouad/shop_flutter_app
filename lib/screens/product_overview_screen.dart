@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopflutterapp/providers/cart.dart';
 import 'package:shopflutterapp/providers/products.dart';
+import 'package:shopflutterapp/screens/cart_screen.dart';
+import 'package:shopflutterapp/widgets/badge.dart';
 import 'package:shopflutterapp/widgets/product_widget.dart';
 
 ///****************************************************
@@ -26,6 +29,21 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
+          Consumer<Cart>(
+            builder: (BuildContext context, Cart cart, Widget iconButton) {
+              String count = cart.getItemCount.toString();
+              return Badge(
+                child: iconButton,
+                value: count,
+              );
+            },
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+              icon: Icon(Icons.shopping_cart),
+            ),
+          ),
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
               setState(() {
@@ -49,10 +67,6 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
                 value: FilterOptions.All,
               ),
             ],
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shopping_cart),
           ),
         ],
       ),
