@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shopflutterapp/providers/orders.dart';
@@ -16,6 +19,8 @@ class OrderWidget extends StatefulWidget {
 }
 
 class _OrderWidgetState extends State<OrderWidget> {
+  bool _expanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,13 +33,71 @@ class _OrderWidgetState extends State<OrderWidget> {
               subtitle:
               Text(DateFormat('dd-MM hh:mm').format(widget.order.date)),
               trailing: IconButton(
-                icon: Icon(Icons.expand_more),
-                onPressed: () {},
+                icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+                onPressed: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                },
               ),
             ),
+            if (_expanded)
+              Container(
+                padding: EdgeInsets.all(8.0),
+                height: min(widget.order.products.length * 28.0 + 32.0, 160),
+                child: ListView(
+                  children: widget.order.products
+                      .map(
+                        (e) =>
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              '${e.title}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            Text(
+                              '${e.quantity}X  ${e.price}\$',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                  )
+                      .toList(),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Widget toggleDetails() {
+    if (_expanded) {
+      return Container(
+        height: min(widget.order.products.length * 8.0 + 100.0, 160),
+        child: ListView(
+          children: widget.order.products
+              .map(
+                (e) =>
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '${e.title}',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      '${e.quantity}X ${e.price} \$',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  ],
+                ),
+          )
+              .toList(),
+        ),
+      );
+    }
   }
 }
