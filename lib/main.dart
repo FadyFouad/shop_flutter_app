@@ -26,7 +26,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.pink,
         ),
         home: ProductOverViewScreen(title: 'Shop Home Page'),
+        initialRoute: 'main',
         routes: {
+          'main': (_) => ProductOverViewScreen(title: 'Shop',),
           ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrderScreen.routeName: (context) => OrderScreen(),
@@ -48,12 +50,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
