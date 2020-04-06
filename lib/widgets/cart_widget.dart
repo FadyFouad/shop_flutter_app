@@ -26,7 +26,14 @@ class CartWidget extends StatelessWidget {
         key: ValueKey(productID),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) {
-          cart.deleteItem(productID);
+          if (quantity > 1) {
+            cart.deleteItem(productID);
+            cart.addToCart(
+                id: id, title: name, price: price, quantity: quantity - 1);
+            print('quantity>1');
+          } else {
+            cart.deleteItem(productID);
+          }
         },
         background: Container(
           color: Theme.of(context).errorColor,
@@ -62,8 +69,8 @@ class CartWidget extends StatelessWidget {
                 child: FittedBox(child: Text('\$ ${price.toStringAsFixed(2)}')),
               ),
               title: Text(name),
-              subtitle: Text(
-                  'Total ${(price * quantity).toStringAsFixed(2)} \$'),
+              subtitle:
+              Text('Total ${(price * quantity).toStringAsFixed(2)} \$'),
               trailing: Text('Quantity = ${quantity}'),
             ),
           ),

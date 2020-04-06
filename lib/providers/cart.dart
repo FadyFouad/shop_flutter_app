@@ -19,7 +19,7 @@ class Cart with ChangeNotifier {
     return amount;
   }
 
-  void addToCart(String id, String title, double price) {
+  void addToCart({String id, String title, double price, int quantity = 1}) {
     if (_cartItems.containsKey(id)) {
       _cartItems.update(
         id,
@@ -46,22 +46,22 @@ class Cart with ChangeNotifier {
 
   void deleteItem(String id) {
     //Todo remove 1 item
-    cartItems.forEach((key, value) {
-      if (_cartItems.containsKey(id) && cartItems[key].quantity > 1) {
-        _cartItems.update(
-          id,
-              (item) =>
-              CartItem(
-                  id: item.id,
-                  title: item.title,
-                  quantity: item.quantity - 1,
-                  price: item.price),
-        );
-      } else {
+//    cartItems.forEach((key, value) {
+//      if (_cartItems.containsKey(id) && cartItems[key].quantity > 1) {
+//        _cartItems.update(
+//          id,
+//              (item) =>
+//              CartItem(
+//                  id: item.id,
+//                  title: item.title,
+//                  quantity: item.quantity - 1,
+//                  price: item.price),
+//        );
+//      } else {
         _cartItems.remove(id);
-      }
+//      }
       notifyListeners();
-    });
+//    });
   }
 
   void clearCart() {

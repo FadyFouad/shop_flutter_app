@@ -72,32 +72,4 @@ class _OrderWidgetState extends State<OrderWidget> {
       ),
     );
   }
-
-  Widget toggleDetails() {
-    if (_expanded) {
-      return Container(
-        height: min(widget.order.products.length * 8.0 + 100.0, 160),
-        child: ListView(
-          children: widget.order.products
-              .map(
-                (e) =>
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      '${e.title}',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      '${e.quantity}X ${e.price} \$',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  ],
-                ),
-          )
-              .toList(),
-        ),
-      );
-    }
-  }
 }
