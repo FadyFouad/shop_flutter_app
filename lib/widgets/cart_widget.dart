@@ -27,10 +27,11 @@ class CartWidget extends StatelessWidget {
         direction: DismissDirection.endToStart,
         onDismissed: (direction) {
           if (quantity > 1) {
+            print('quantity=$quantity');
             cart.deleteItem(productID);
             cart.addToCart(
                 id: id, title: name, price: price, quantity: quantity - 1);
-            print('quantity>1');
+            print('quantity=$quantity');
           } else {
             cart.deleteItem(productID);
           }
