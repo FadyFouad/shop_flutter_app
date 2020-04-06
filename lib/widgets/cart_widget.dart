@@ -25,6 +25,29 @@ class CartWidget extends StatelessWidget {
       child: Dismissible(
         key: ValueKey(productID),
         direction: DismissDirection.endToStart,
+        confirmDismiss: (dir) =>
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Confirm Delete'),
+                    content: Text('Are You sure ?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('YES'),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('NO'),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                      ),
+                    ],
+                  );
+                }),
         onDismissed: (direction) {
           if (quantity > 1) {
             print('quantity=$quantity');

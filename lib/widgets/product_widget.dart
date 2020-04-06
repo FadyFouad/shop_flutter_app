@@ -9,7 +9,6 @@ import 'package:shopflutterapp/screens/product_detail_screen.dart';
 ///****************************************************
 
 class ProductItem extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
@@ -49,6 +48,13 @@ class ProductItem extends StatelessWidget {
               onPressed: () {
                 cart.addToCart(
                     id: product.id, title: product.name, price: product.price);
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('One Item Added'),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () => cart.deleteSingleItem(product.id),
+                  ),
+                ));
               },
             ),
             backgroundColor: Colors.black54,
