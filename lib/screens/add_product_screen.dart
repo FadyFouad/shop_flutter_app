@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopflutterapp/models/product.dart';
+import 'package:shopflutterapp/providers/products.dart';
 
 ///****************************************************
 ///*** Created by Fady Fouad on 06-Apr-20 at 23:42.****
@@ -74,6 +76,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       price: 0,
                       imageUrl: '',
                       description: ''),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter the Title';
+                    } else
+                      return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Price'),
@@ -90,6 +98,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       price: double.parse(price),
                       imageUrl: _addedProduct.imageUrl,
                       description: _addedProduct.description),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter the Price';
+                    } else if (double.tryParse(value) == null ||
+                        double.parse(value) <= 0) {
+                      return 'Please enter valid number';
+                    } else
+                      return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Description'),
@@ -103,6 +120,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       price: _addedProduct.price,
                       imageUrl: _addedProduct.imageUrl,
                       description: description),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please Enter the Description';
+                    } else
+                      return null;
+                  },
                 ),
                 Row(
                   children: <Widget>[
@@ -135,6 +158,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             price: _addedProduct.price,
                             imageUrl: url,
                             description: _addedProduct.description),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please Enter valid URL';
+                          } else
+                            return null;
+                        },
                       ),
                     ),
                   ],
@@ -159,7 +188,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void _saveProduct() {
+    var products = Provider.of<Products>(context, listen: false);
+    final isValid = _formGlobalKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
     _formGlobalKey.currentState.save();
+    products.addProduct(_addedProduct);
     print(_addedProduct.toString());
+    Navigator.of(context).pop();
   }
 }

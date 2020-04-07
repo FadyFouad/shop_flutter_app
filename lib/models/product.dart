@@ -20,14 +20,13 @@ class Product with ChangeNotifier {
       @required this.price,
       this.isFav = false});
 
-
   @override
   String toString() {
     return 'Product{id: $id, name: $name, description: $description, imageUrl: $imageUrl, price: $price, isFav: $isFav}';
   }
 
-  void toggleFav(){
-    isFav =! isFav;
+  void toggleFav() {
+    isFav = !isFav;
     notifyListeners();
   }
 }
