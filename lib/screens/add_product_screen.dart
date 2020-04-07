@@ -14,15 +14,29 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   final _PriceFocusNode = FocusNode();
   final _DescFocusNode = FocusNode();
-  final _imgUrlController = TextEditingController();
+  final _imageUrlFocus = FocusNode();
+  final _imageUrlController = TextEditingController();
 
   @override
   void dispose() {
     // TODO: implement dispose
     _DescFocusNode.dispose();
     _PriceFocusNode.dispose();
-    _imgUrlController.dispose();
+    _imageUrlFocus.dispose();
+    _imageUrlController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _imageUrlFocus.addListener(_updateImageUrl);
+    super.initState();
+  }
+
+  void _updateImageUrl() {
+    if (!_imageUrlFocus.hasFocus) {
+      setState(() {});
+    }
   }
 
   @override
@@ -68,15 +82,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       margin: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
                           border: Border.all(width: 1, color: Colors.amber)),
-                      child: Container(
-                        child: _imgUrlController.text.isEmpty
-                            ? Text('No image Found')
-                            : FittedBox(
-                                child: Image.network(
-                                  _imgUrlController.text,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                      child: _imageUrlController.text.isEmpty
+                          ? Text('No image Found')
+                          : FittedBox(
+                        child: Image.network(
+                          _imageUrlController.text,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -84,7 +96,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         decoration: InputDecoration(labelText: 'Image URL'),
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.url,
-                        controller: _imgUrlController,
+                        controller: _imageUrlController,
+                        focusNode: _imageUrlFocus,
                       ),
                     ),
                   ],

@@ -31,9 +31,12 @@ class ProductDetailsScreen extends StatelessWidget {
                 width: double.infinity,
                 margin: EdgeInsets.only(
                     bottom: 16.0, left: 16.0, right: 16.0, top: 4),
-                child: Image.network(
-                  selectedProduct.imageUrl,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: selectedProduct.id,
+                  child: Image.network(
+                    selectedProduct.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               SizedBox(

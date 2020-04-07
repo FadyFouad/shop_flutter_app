@@ -17,19 +17,21 @@ class ProductItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: GridTile(
-          child: Container(
-              child: InkWell(
+          child: InkWell(
             onTap: () {
               Navigator.of(context).pushNamed(
                 ProductDetailsScreen.routeName,
                 arguments: product.id,
               );
             },
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: product.id,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
-          )),
+          ),
           footer: GridTileBar(
             leading: IconButton(
               icon: Icon(
