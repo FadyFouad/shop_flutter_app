@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopflutterapp/screens/orders_screen.dart';
+import 'package:shopflutterapp/screens/user_products_screen.dart';
 
 ///****************************************************
 ///*** Created by Fady Fouad on 05-Apr-20 at 16:13.***
@@ -29,6 +30,15 @@ class MainDrawer extends StatelessWidget {
             title: Text('Orders'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('My Products'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                  UserProductsScreen.routeName);
             },
           ),
         ],
