@@ -51,6 +51,12 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  void editProduct(String id, Product product) {
+    final index = _productList.indexWhere((element) => product.id == id);
+    _productList[index] = product;
+    notifyListeners();
+  }
+
   Product getProduct(String id) =>
       productList.firstWhere((product) => id == product.id);
 }

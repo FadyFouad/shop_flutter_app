@@ -6,10 +6,12 @@ import 'package:shopflutterapp/screens/add_product_screen.dart';
 ///****************************************************
 
 class UserProduct extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
 
-  const UserProduct({Key key, this.title, this.imageUrl}) : super(key: key);
+  const UserProduct({Key key, this.title, this.imageUrl, this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class UserProduct extends StatelessWidget {
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       Navigator.of(context).pushNamed(
-                          AddProductScreen.routeName);
+                          AddProductScreen.routeName, arguments: id);
                     },
                   ),
                   IconButton(

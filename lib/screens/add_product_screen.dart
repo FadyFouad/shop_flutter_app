@@ -20,10 +20,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _imageUrlFocus = FocusNode();
   final _imageUrlController = TextEditingController();
   final _formGlobalKey = GlobalKey<FormState>();
+
+  var _isInit = true;
   Product _addedProduct = Product(
       id: null,
       name: null,
-      price: null,
+      price: 0,
       imageUrl: null,
       description: null);
 
@@ -41,6 +43,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void initState() {
     _imageUrlFocus.addListener(_updateImageUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final String id = ModalRoute
+          .of(context)
+          .settings
+          .arguments as String;
+      if (id != null) {
+        _addedProduct =
+            Provider.of<Products>(context, listen: false).getProduct(id);
+        _imageUrlController.text = _addedProduct.imageUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   void _updateImageUrl() {
@@ -64,6 +83,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Title'),
+                  initialValue: _addedProduct.name,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   onFieldSubmitted: (_) {
@@ -71,11 +91,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   },
                   onSaved: (title) =>
                   _addedProduct = Product(
-                      id: DateTime.now().toString(),
+                      id: _addedProduct.id,
                       name: title,
                       price: 0,
                       imageUrl: '',
-                      description: ''),
+                      description: '',
+                      isFav: _addedProduct.isFav),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please Enter the Title';
@@ -85,6 +106,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Price'),
+                  initialValue: '${_addedProduct.price}',
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   focusNode: _PriceFocusNode,
@@ -97,7 +119,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       name: _addedProduct.name,
                       price: double.parse(price),
                       imageUrl: _addedProduct.imageUrl,
-                      description: _addedProduct.description),
+                      description: _addedProduct.description,
+                      isFav: _addedProduct.isFav),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please Enter the Price';
@@ -110,6 +133,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Description'),
+                  initialValue: _addedProduct.description,
                   keyboardType: TextInputType.multiline,
                   focusNode: _DescFocusNode,
                   maxLines: 3,
@@ -119,7 +143,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       name: _addedProduct.name,
                       price: _addedProduct.price,
                       imageUrl: _addedProduct.imageUrl,
-                      description: description),
+                      description: description,
+                      isFav: _addedProduct.isFav),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please Enter the Description';
@@ -157,7 +182,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             name: _addedProduct.name,
                             price: _addedProduct.price,
                             imageUrl: url,
-                            description: _addedProduct.description),
+                            description: _addedProduct.description,
+                            isFav: _addedProduct.isFav),
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please Enter valid URL';
@@ -194,7 +220,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
     _formGlobalKey.currentState.save();
-    products.addProduct(_addedProduct);
+    if (_addedProduct.id != null) {
+      products.editProduct(_addedProduct.id, _addedProduct);
+    } else {
+      _addedProduct = Product(
+          id: DateTime.now().toString(),
+          name: _addedProduct.name,
+          description: _addedProduct.description,
+          imageUrl: _addedProduct.imageUrl,
+          price: _addedProduct.price,
+          isFav: _addedProduct.isFav);
+      products.addProduct(_addedProduct);
+    }
     print(_addedProduct.toString());
     Navigator.of(context).pop();
   }
