@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopflutterapp/providers/products.dart';
 import 'package:shopflutterapp/screens/add_product_screen.dart';
 
 ///****************************************************
@@ -39,7 +41,33 @@ class UserProduct extends StatelessWidget {
                       Icons.delete,
                       color: Theme.of(context).errorColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Confirm Delete'),
+                              content: Text('Are You sure ?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('YES'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                    Provider.of<Products>(
+                                        context, listen: false).removeProduct(
+                                        id);
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text('NO'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    },
                   ),
                 ],
               ),
