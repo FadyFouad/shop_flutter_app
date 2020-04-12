@@ -22,6 +22,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _formGlobalKey = GlobalKey<FormState>();
 
   var _isInit = true;
+  var _isLoading = false;
   Product _addedProduct = Product(
       id: null,
       name: null,
@@ -74,7 +75,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(
         title: Text('Add New Product'),
       ),
-      body: Container(
+      body: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : Container(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -159,7 +164,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       width: 120,
                       margin: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.amber)),
+                          border:
+                          Border.all(width: 1, color: Colors.amber)),
                       child: _imageUrlController.text.isEmpty
                           ? Text('No image Found')
                           : FittedBox(
@@ -171,7 +177,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        decoration: InputDecoration(labelText: 'Image URL'),
+                        decoration:
+                        InputDecoration(labelText: 'Image URL'),
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.url,
                         controller: _imageUrlController,
@@ -214,6 +221,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void _saveProduct() {
+    setState(() {
+      _isLoading = true;
+    });
     var products = Provider.of<Products>(context, listen: false);
     final isValid = _formGlobalKey.currentState.validate();
     if (!isValid) {
@@ -230,9 +240,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
           imageUrl: _addedProduct.imageUrl,
           price: _addedProduct.price,
           isFav: _addedProduct.isFav);
-      products
-          .addProduct(_addedProduct)
-          .then((value) => Navigator.of(context).pop());
+      products.addProduct(_addedProduct).then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
     }
     print(_addedProduct.toString());
   }
