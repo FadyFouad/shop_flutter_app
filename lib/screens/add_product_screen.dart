@@ -230,9 +230,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
           imageUrl: _addedProduct.imageUrl,
           price: _addedProduct.price,
           isFav: _addedProduct.isFav);
-      products.addProduct(_addedProduct);
+      products
+          .addProduct(_addedProduct)
+          .then((value) => Navigator.of(context).pop());
     }
     print(_addedProduct.toString());
-    Navigator.of(context).pop();
   }
 }
