@@ -49,33 +49,44 @@ class Products with ChangeNotifier {
   List<Product> get favProductList =>
       _productList.where((product) => product.isFav).toList();
 
-  Future<void> addProduct(Product product) {
+  Future<void> fetchProduct() async {
     const url = 'https://test-27222.firebaseio.com/products.json';
-    return Http.post(
-      url,
-      body: json.encode({
-        'title': product.name,
-        'desc': product.description,
-        'price': product.price,
-        'imageUrl': product.imageUrl,
-        'isFav': product.isFav,
-      }),
-    ).then((value) {
-      print(value.toString());
+    try {
+      final results = await Http.get(url);
+      print(json.decode(results.body)['-M4kxL3zfdHv1fuVuzcY']);
+    } catch (e) {
+      throw(e);
+    }
+  }
+
+  Future<void> addProduct(Product product) async {
+    const url = 'https://test-27222.firebaseio.com/products.json';
+    try {
+      final response = await Http.post(
+        url,
+        body: json.encode({
+          'title': product.name,
+          'desc': product.description,
+          'price': product.price,
+          'imageUrl': product.imageUrl,
+          'isFav': product.isFav,
+        }),
+      );
+      print(response.toString());
       product = Product(
-        id: json.decode(value.body)['name'],
+        id: json.decode(response.body)['name'],
         name: product.name,
         description: product.description,
         imageUrl: product.imageUrl,
         price: product.price,
         isFav: product.isFav,
       );
-      _productList.add(product);
-      notifyListeners();
-    }).catchError((onError) {
-      print(onError);
-      throw onError;
-    });
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+    _productList.add(product);
+    notifyListeners();
   }
 
   void editProduct(String id, Product product) {

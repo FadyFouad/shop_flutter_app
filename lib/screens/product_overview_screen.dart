@@ -25,6 +25,13 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   var _showOnlyFavorites = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<Products>(context, listen: false).fetchProduct();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MainDrawer(),

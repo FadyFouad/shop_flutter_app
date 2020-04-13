@@ -43,6 +43,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     _imageUrlFocus.addListener(_updateImageUrl);
+    _imageUrlController.text =
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg';
     super.initState();
   }
 
@@ -220,7 +222,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  void _saveProduct() {
+  void _saveProduct() async {
     setState(() {
       _isLoading = true;
     });
@@ -233,20 +235,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_addedProduct.id != null) {
       products.editProduct(_addedProduct.id, _addedProduct);
     } else {
-      _addedProduct = Product(
-          id: DateTime.now().toString(),
-          name: _addedProduct.name,
-          description: _addedProduct.description,
-          imageUrl: _addedProduct.imageUrl,
-          price: _addedProduct.price,
-          isFav: _addedProduct.isFav);
-
-      products.addProduct(_addedProduct).catchError((onError) {
-        return showDialog(
+      try {
+        await products.addProduct(_addedProduct);
+      } catch (e) {
+        await showDialog(
           context: context,
           builder: (context) =>
               AlertDialog(
-                title: Text(onError.toString()),
+                title: Text(e.toString()),
                 actions: <Widget>[
                   FlatButton(
                     onPressed: () {
@@ -257,12 +253,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ],
               ),
         );
-      }).then((value) {
+      } finally {
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
+      }
     }
     print(_addedProduct.toString());
   }
