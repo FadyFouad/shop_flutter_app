@@ -240,20 +240,28 @@ class _AddProductScreenState extends State<AddProductScreen> {
           imageUrl: _addedProduct.imageUrl,
           price: _addedProduct.price,
           isFav: _addedProduct.isFav);
-      products.addProduct(_addedProduct).then((value) {}).catchError((onError) {
-        return showDialog(context: context, builder: (context) {
-          return AlertDialog(title: Text(onError.toString()), actions: <Widget>[
-            FlatButton(onPressed: () {
-              Navigator.of(context).pop();
-            },
-              child: Text('close'),)
-          ],);
-        }).then((value) {
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).pop();
+
+      products.addProduct(_addedProduct).catchError((onError) {
+        return showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(onError.toString()),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('close'),
+                  ),
+                ],
+              ),
+        );
+      }).then((value) {
+        setState(() {
+          _isLoading = false;
         });
+        Navigator.of(context).pop();
       });
     }
     print(_addedProduct.toString());

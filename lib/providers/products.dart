@@ -50,7 +50,7 @@ class Products with ChangeNotifier {
       _productList.where((product) => product.isFav).toList();
 
   Future<void> addProduct(Product product) {
-    const url = 'https://test-27222.firebaseio.com/products';
+    const url = 'https://test-27222.firebaseio.com/products.json';
     return Http.post(
       url,
       body: json.encode({
