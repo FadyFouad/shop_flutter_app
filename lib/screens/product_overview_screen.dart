@@ -23,12 +23,31 @@ class ProductOverViewScreen extends StatefulWidget {
 
 class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   var _showOnlyFavorites = false;
+  var _isInit = false;
+  var _isLoading = false;
 
   @override
   void initState() {
-    // TODO: implement initState
-    Provider.of<Products>(context, listen: false).fetchProduct();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      print('_isLoading = $_isLoading');
+      Provider.of<Products>(context).fetchProduct();
+      print('Provider.of<Products>(context).fetchProduct()');
+      setState(() {
+        _isLoading = false;
+      });
+      print('_isLoading = $_isLoading');
+    }
+    _isInit = true;
+    print('--------------------------------------------------');
+    super.didChangeDependencies();
   }
 
   @override
@@ -79,7 +98,11 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
           ),
         ],
       ),
-      body: Container(
+      body: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : Container(
         child: ProductGridView(
           isFav: _showOnlyFavorites,
         ),

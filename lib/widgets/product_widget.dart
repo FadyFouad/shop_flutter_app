@@ -49,7 +49,7 @@ class ProductItem extends StatelessWidget {
               ),
               onPressed: () {
                 cart.addToCart(
-                    id: product.id, title: product.name, price: product.price);
+                    id: product.id, title: product.title, price: product.price);
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('One Item Added'),
                   action: SnackBarAction(
@@ -61,7 +61,7 @@ class ProductItem extends StatelessWidget {
             ),
             backgroundColor: Colors.black54,
             title: Text(
-              product.name,
+              product.title,
               textAlign: TextAlign.center,
             ),
           ),

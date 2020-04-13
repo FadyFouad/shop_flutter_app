@@ -25,7 +25,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   var _isLoading = false;
   Product _addedProduct = Product(
       id: null,
-      name: null,
+      title: null,
       price: 0,
       imageUrl: null,
       description: null);
@@ -90,7 +90,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Title'),
-                  initialValue: _addedProduct.name,
+                  initialValue: _addedProduct.title,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   onFieldSubmitted: (_) {
@@ -99,7 +99,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onSaved: (title) =>
                   _addedProduct = Product(
                       id: _addedProduct.id,
-                      name: title,
+                      title: title,
                       price: 0,
                       imageUrl: '',
                       description: '',
@@ -123,7 +123,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onSaved: (price) =>
                   _addedProduct = Product(
                       id: _addedProduct.id,
-                      name: _addedProduct.name,
+                      title: _addedProduct.title,
                       price: double.parse(price),
                       imageUrl: _addedProduct.imageUrl,
                       description: _addedProduct.description,
@@ -147,7 +147,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   onSaved: (description) =>
                   _addedProduct = Product(
                       id: _addedProduct.id,
-                      name: _addedProduct.name,
+                      title: _addedProduct.title,
                       price: _addedProduct.price,
                       imageUrl: _addedProduct.imageUrl,
                       description: description,
@@ -188,7 +188,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         onSaved: (url) =>
                         _addedProduct = Product(
                             id: _addedProduct.id,
-                            name: _addedProduct.name,
+                            title: _addedProduct.title,
                             price: _addedProduct.price,
                             imageUrl: url,
                             description: _addedProduct.description,

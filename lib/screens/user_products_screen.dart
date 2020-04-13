@@ -37,7 +37,7 @@ class UserProductsScreen extends StatelessWidget {
             return Container(
               child: UserProduct(
                 id: products.productList[index].id,
-                title: products.productList[index].name,
+                title: products.productList[index].title,
                 imageUrl: products.productList[index].imageUrl,
               ),
             );

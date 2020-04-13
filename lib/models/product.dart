@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
   final String id;
-  final String name;
+  final String title;
   final String description;
   final String imageUrl;
   final double price;
@@ -14,7 +14,7 @@ class Product with ChangeNotifier {
 
   Product(
       {@required this.id,
-      @required this.name,
+        @required this.title,
       @required this.description,
       @required this.imageUrl,
       @required this.price,
@@ -22,7 +22,7 @@ class Product with ChangeNotifier {
 
   @override
   String toString() {
-    return 'Product{id: $id, name: $name, description: $description, imageUrl: $imageUrl, price: $price, isFav: $isFav}';
+    return 'Product{id: $id, title: $title, description: $description, imageUrl: $imageUrl, price: $price, isFav: $isFav}';
   }
 
   void toggleFav() {
