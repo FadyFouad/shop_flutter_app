@@ -118,6 +118,42 @@ class ProductGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//    return FutureBuilder(
+//      future: Provider.of<Products>(context, listen: false).fetchProduct(),
+//      builder: (context, dataSnapshot) {
+//        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+//          return Center(child: CircularProgressIndicator());
+//        } else {
+//          if (dataSnapshot.error != null) {
+//            return Center(child: Text('An error occured!'));
+//          } else {
+    final productData = Provider.of<Products>(context);
+    final products =
+    isFav ? productData.favProductList : productData.productList;
+    return GridView.builder(
+      padding: const EdgeInsets.all(8.0),
+      itemBuilder: (BuildContext context, int index) {
+        return ChangeNotifierProvider.value(
+          value: products[index],
+          child: ProductItem(),
+        );
+      },
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0),
+      itemCount: products.length,
+    );
+  }
+}
+//      },
+//    );
+//  }
+//}
+
+
+/*
     final productData = Provider.of<Products>(context);
     final products =
         isFav ? productData.favProductList : productData.productList;
@@ -138,7 +174,7 @@ class ProductGridView extends StatelessWidget {
     );
   }
 }
-
+*/
 enum FilterOptions {
   Favorites,
   All,

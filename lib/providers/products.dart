@@ -108,8 +108,24 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void editProduct(String id, Product product) {
+  Future<void> editProduct(String id, Product product) async {
+    final url = 'https://test-27222.firebaseio.com/products/$id.json';
     final index = _productList.indexWhere((element) => product.id == id);
+    try {
+      await Http.patch(
+        url,
+        body: json.encode(
+          {
+            'title': product.title,
+            'desc': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+          },
+        ),
+      );
+    } catch (e) {
+      throw(e);
+    }
     _productList[index] = product;
     notifyListeners();
   }

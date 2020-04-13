@@ -233,7 +233,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
     _formGlobalKey.currentState.save();
     if (_addedProduct.id != null) {
-      products.editProduct(_addedProduct.id, _addedProduct);
+      try {
+        await products.editProduct(_addedProduct.id, _addedProduct);
+      } catch (e) {
+        await showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(e.toString()),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('close'),
+                  ),
+                ],
+              ),
+        );
+      }
     } else {
       try {
         await products.addProduct(_addedProduct);
@@ -253,13 +271,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ],
               ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
     print(_addedProduct.toString());
   }
 }
