@@ -135,17 +135,16 @@ class Products with ChangeNotifier {
   Future<void> removeProduct(String id) async {
     final url = 'https://test-27222.firebaseio.com/products/$id.json';
     final productIndex = _productList.indexWhere((element) => element.id == id);
-    final product = _productList[productIndex];
+    var product = _productList[productIndex];
     _productList.removeAt(productIndex);
     notifyListeners();
-    Http.delete(url).then((value) {
-      if (value.statusCode >= 400) {
-        throw HttpException('Deleting Faild');
-      }
-    }).catchError(() {
+    final result = await Http.delete(url);
+    if (result.statusCode >= 400) {
       _productList.insert(productIndex, product);
       notifyListeners();
-    });
+      throw HttpException('Deleting Faild');
+    }
+    product = null;
     notifyListeners();
   }
 

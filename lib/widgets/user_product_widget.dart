@@ -17,6 +17,7 @@ class UserProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return Column(
       children: <Widget>[
         Container(
@@ -32,8 +33,8 @@ class UserProduct extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      Navigator.of(context).pushNamed(
-                          AddProductScreen.routeName, arguments: id);
+                      Navigator.of(context)
+                          .pushNamed(AddProductScreen.routeName, arguments: id);
                     },
                   ),
                   IconButton(
@@ -51,11 +52,17 @@ class UserProduct extends StatelessWidget {
                               actions: <Widget>[
                                 FlatButton(
                                   child: Text('YES'),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Navigator.of(context).pop(true);
-                                    Provider.of<Products>(
-                                        context, listen: false).removeProduct(
-                                        id);
+                                    try {
+                                      await Provider.of<Products>(context,
+                                          listen: false)
+                                          .removeProduct(id);
+                                    } catch (e) {
+                                      scaffold.showSnackBar(SnackBar(
+                                        content: Text(e.toString()),
+                                      ));
+                                    }
                                   },
                                 ),
                                 FlatButton(
