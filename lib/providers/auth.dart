@@ -30,40 +30,7 @@ class Authentication with ChangeNotifier {
     return null;
   }
 
-  Future<void> signUp({String eMail, String passWord}) async {
-    const url =
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=$API_KEY';
-    try {
-      final response = await Http.post(
-        url,
-        body: json.encode({
-          'email': eMail,
-          'password': passWord,
-          'returnSecureToken': true,
-        }),
-      );
-      final result = json.decode(response.body);
-      if (result['error'] != null) {
-        throw HttpException(result['error']['message']);
-      }
-      _token = result['idToken'];
-      _userId = result['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(
-            result['expiresIn'],
-          ),
-        ),
-      );
-      notifyListeners();
-    } catch (e) {
-      throw (e);
-    }
-  }
-
-  Future<void> signIn({String eMail, String passWord}) async {
-    const url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
+  Future<void> _authenticate({String eMail, String passWord, url}) async {
     try {
       final response = await Http.post(
         url,
@@ -88,5 +55,17 @@ class Authentication with ChangeNotifier {
       print(stack);
       throw (e);
     }
+  }
+
+  Future<void> signUp({String eMail, String passWord}) async {
+    const url =
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=$API_KEY';
+    return _authenticate(eMail: eMail, passWord: passWord, url: url);
+  }
+
+  Future<void> signIn({String eMail, String passWord}) async {
+    const url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
+    return _authenticate(eMail: eMail, passWord: passWord, url: url);
   }
 }
