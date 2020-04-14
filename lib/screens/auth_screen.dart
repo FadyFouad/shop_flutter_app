@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopflutterapp/models/http_exception.dart';
 import 'package:shopflutterapp/providers/auth.dart';
 
 enum AuthMode { SignUp, LogIn }
@@ -99,6 +100,25 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            title: Text('An Error Occurred!'),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ),
+    );
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -108,14 +128,22 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.LogIn) {
-      // Log user in
-      await Provider.of<Authentication>(context, listen: false)
-          .signUp(eMail: _authData['email'], passWord: _authData['password']);
-    } else {
-      // Sign user up
-      await Provider.of<Authentication>(context, listen: false)
-          .signUp(eMail: _authData['email'], passWord: _authData['password']);
+    try {
+      if (_authMode == AuthMode.LogIn) {
+        // Log user in
+        await Provider.of<Authentication>(context, listen: false)
+            .signIn(eMail: _authData['email'], passWord: _authData['password']);
+      } else {
+        // Sign user up
+        await Provider.of<Authentication>(context, listen: false)
+            .signUp(eMail: _authData['email'], passWord: _authData['password']);
+      }
+    } on HttpException catch (e) {
+      print(e);
+      _showErrorDialog(e.toString());
+    } catch (e) {
+      _showErrorDialog(e.toString());
+      print(e);
     }
     setState(() {
       _isLoading = false;
