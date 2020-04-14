@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopflutterapp/providers/auth.dart';
 import 'package:shopflutterapp/providers/cart.dart';
 import 'package:shopflutterapp/providers/orders.dart';
 import 'package:shopflutterapp/providers/products.dart';
 import 'package:shopflutterapp/screens/add_product_screen.dart';
+import 'package:shopflutterapp/screens/auth_screen.dart';
 import 'package:shopflutterapp/screens/cart_screen.dart';
 import 'package:shopflutterapp/screens/orders_screen.dart';
 import 'package:shopflutterapp/screens/product_detail_screen.dart';
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: Products()),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProvider.value(value: Orders()),
+        ChangeNotifierProvider.value(value: Authentication()),
       ],
       child: MaterialApp(
         title: 'Shop App',
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
         home: ProductOverViewScreen(title: 'Shop Home Page'),
         initialRoute: 'main',
         routes: {
-          'main': (_) => ProductOverViewScreen(title: 'Shop',),
+          'main': (_) => AuthScreen(),
           ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           OrderScreen.routeName: (context) => OrderScreen(),
