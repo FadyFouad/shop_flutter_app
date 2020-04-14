@@ -11,8 +11,24 @@ import 'package:shopflutterapp/models/http_exception.dart';
 class Authentication with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
-  DateTime _userId;
+  String _userId;
   static const API_KEY = 'AIzaSyAQ6wgW6PCdM44Z_UbhCyX546lZDI4ZJMw';
+
+  bool get isAuthenticated {
+    print('isAuthenticated ${token != null} token = $token');
+    print(
+        'isAuthenticated : _token $_token _expiryDate $_expiryDate _userId $_userId');
+    return token != null;
+  }
+
+  String get token {
+    if (_expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        _token != null) {
+      return _token;
+    }
+    return null;
+  }
 
   Future<void> signUp({String eMail, String passWord}) async {
     const url =
@@ -30,6 +46,16 @@ class Authentication with ChangeNotifier {
       if (result['error'] != null) {
         throw HttpException(result['error']['message']);
       }
+      _token = result['idToken'];
+      _userId = result['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            result['expiresIn'],
+          ),
+        ),
+      );
+      notifyListeners();
     } catch (e) {
       throw (e);
     }
@@ -38,14 +64,29 @@ class Authentication with ChangeNotifier {
   Future<void> signIn({String eMail, String passWord}) async {
     const url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
-    final response = await Http.post(
-      url,
-      body: json.encode({
-        'email': eMail,
-        'password': passWord,
-        'returnSecureToken': true,
-      }),
-    );
-    print(json.decode(response.body));
+    try {
+      final response = await Http.post(
+        url,
+        body: json.encode({
+          'email': eMail,
+          'password': passWord,
+          'returnSecureToken': true,
+        }),
+      );
+      final result = json.decode(response.body);
+      if (result['error'] != null) {
+        throw HttpException(result['error']['message']);
+      }
+      _token = result['idToken'];
+      _userId = result['localId'];
+      _expiryDate =
+          DateTime.now().add(Duration(seconds: int.parse(result['expiresIn'])));
+      print(
+          'signIn : _token $_token _expiryDate $_expiryDate _userId $_userId');
+      notifyListeners();
+    } catch (e, stack) {
+      print(stack);
+      throw (e);
+    }
   }
 }

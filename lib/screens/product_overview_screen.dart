@@ -15,6 +15,8 @@ import 'package:shopflutterapp/widgets/product_widget.dart';
 class ProductOverViewScreen extends StatefulWidget {
   final String title;
 
+  static var routeName = 'ProductOverViewScreen';
+
   ProductOverViewScreen({Key key, this.title}) : super(key: key);
 
   @override
@@ -151,7 +153,6 @@ class ProductGridView extends StatelessWidget {
 //    );
 //  }
 //}
-
 
 /*
     final productData = Provider.of<Products>(context);

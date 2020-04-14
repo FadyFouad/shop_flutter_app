@@ -139,11 +139,11 @@ class _AuthCardState extends State<AuthCard> {
             .signUp(eMail: _authData['email'], passWord: _authData['password']);
       }
     } on HttpException catch (e) {
-      print(e);
       _showErrorDialog(e.toString());
+      print('on HttpException catch (${e.toString()})');
     } catch (e) {
       _showErrorDialog(e.toString());
-      print(e);
+      print('catch (${e.toString()})');
     }
     setState(() {
       _isLoading = false;
