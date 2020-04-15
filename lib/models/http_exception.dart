@@ -1,14 +1,11 @@
-///****************************************************
-///*** Created by Fady Fouad on 13-Apr-20 at 16:54.***
-///****************************************************
-
 class HttpException implements Exception {
-  final String errorMessage;
+  final String message;
 
-  HttpException(this.errorMessage);
+  HttpException(this.message);
 
   @override
   String toString() {
-    return 'HttpException{errorMessage: $errorMessage}';
+    return message;
+    // return super.toString(); // Instance of HttpException
   }
 }

@@ -1,56 +1,64 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopflutterapp/providers/products.dart';
-import 'package:shopflutterapp/widgets/main_drawer.dart';
-import 'package:shopflutterapp/widgets/user_product_widget.dart';
 
-import 'add_product_screen.dart';
-
-///****************************************************
-///*** Created by Fady Fouad on 06-Apr-20 at 17:50.***
-///****************************************************
+import '../providers/products.dart';
+import '../widgets/user_product_item.dart';
+import '../widgets/app_drawer.dart';
+import './edit_product_screen.dart';
 
 class UserProductsScreen extends StatelessWidget {
-  static const routeName = 'UserProductsScreen';
+  static const routeName = '/user-products';
 
-  Future<void> _refreshPage(BuildContext context) async {
-    await Provider.of<Products>(context).fetchProduct();
+  Future<void> _refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<Products>(context);
+    // final productsData = Provider.of<Products>(context);
+    print('rebuilding...');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Products'),
+        title: const Text('Your Products'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(AddProductScreen.routeName);
+              Navigator.of(context).pushNamed(EditProductScreen.routeName);
             },
           ),
         ],
       ),
-      drawer: MainDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () {
-          return _refreshPage(context);
-        },
-        child: Container(
-          padding: EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Container(
-                child: UserProduct(
-                  id: products.productList[index].id,
-                  title: products.productList[index].title,
-                  imageUrl: products.productList[index].imageUrl,
+      drawer: AppDrawer(),
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (ctx, snapshot) =>
+        snapshot.connectionState == ConnectionState.waiting
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : RefreshIndicator(
+          onRefresh: () => _refreshProducts(context),
+          child: Consumer<Products>(
+            builder: (ctx, productsData, _) =>
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: ListView.builder(
+                    itemCount: productsData.items.length,
+                    itemBuilder: (_, i) =>
+                        Column(
+                          children: [
+                            UserProductItem(
+                              productsData.items[i].id,
+                              productsData.items[i].title,
+                              productsData.items[i].imageUrl,
+                            ),
+                            Divider(),
+                          ],
+                        ),
+                  ),
                 ),
-              );
-            },
-            itemCount: products.productList.length,
           ),
         ),
       ),

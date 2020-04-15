@@ -1,24 +1,16 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as Http;
-import 'package:shopflutterapp/models/http_exception.dart';
+import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 
-///****************************************************
-///*** Created by Fady Fouad on 13-Apr-20 at 23:55.***
-///****************************************************
+import '../models/http_exception.dart';
 
-class Authentication with ChangeNotifier {
+class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
-  static const API_KEY = 'AIzaSyAQ6wgW6PCdM44Z_UbhCyX546lZDI4ZJMw';
 
-  bool get isAuthenticated {
-    print(
-        'isAuthenticated : _token = ${_token != null
-            ? 'Not Null'
-            : 'Null'} _expiryDate = $_expiryDate _userId = $_userId');
+  bool get isAuth {
     return token != null;
   }
 
@@ -31,45 +23,49 @@ class Authentication with ChangeNotifier {
     return null;
   }
 
-  Future<void> _authenticate({String eMail, String passWord, url}) async {
+  String get userId {
+    return _userId;
+  }
+
+  Future<void> _authenticate(String email, String password,
+      String urlSegment) async {
+    final url =
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyAQ6wgW6PCdM44Z_UbhCyX546lZDI4ZJMw';
     try {
-      final response = await Http.post(
+      final response = await http.post(
         url,
-        body: json.encode({
-          'email': eMail,
-          'password': passWord,
-          'returnSecureToken': true,
-        }),
+        body: json.encode(
+          {
+            'email': email,
+            'password': password,
+            'returnSecureToken': true,
+          },
+        ),
       );
-      final result = json.decode(response.body);
-      if (result['error'] != null) {
-        throw HttpException(result['error']['message']);
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
       }
-      _token = result['idToken'];
-      _userId = result['localId'];
-      _expiryDate =
-          DateTime.now().add(Duration(seconds: int.parse(result['expiresIn'])));
-      print(
-          'signIn : _token = ${_token != null
-              ? 'Not Null'
-              : 'Null'} _expiryDate = $_expiryDate _userId = $_userId');
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
+        ),
+      );
       notifyListeners();
-    } catch (e, stack) {
-      print(stack);
-      throw (e);
+    } catch (error) {
+      throw error;
     }
   }
 
-  Future<void> signUp({String eMail, String passWord}) async {
-    const url =
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=$API_KEY';
-    return _authenticate(eMail: eMail, passWord: passWord, url: url);
+  Future<void> signup(String email, String password) async {
+    return _authenticate(email, password, 'signupNewUser');
   }
 
-  Future<void> signIn({String eMail, String passWord}) async {
-    const url =
-//        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=$API_KEY';
-    return _authenticate(eMail: eMail, passWord: passWord, url: url);
+  Future<void> login(String email, String password) async {
+    return _authenticate(email, password, 'verifyPassword');
   }
 }

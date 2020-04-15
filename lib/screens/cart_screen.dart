@@ -1,85 +1,111 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopflutterapp/providers/cart.dart';
-import 'package:shopflutterapp/providers/orders.dart';
-import 'package:shopflutterapp/screens/orders_screen.dart';
-import 'package:shopflutterapp/widgets/cart_widget.dart';
 
-///****************************************************
-///*** Created by Fady Fouad on 04-Apr-20 at 00:43.***
-///****************************************************
+import '../providers/cart.dart' show Cart;
+import '../providers/orders.dart';
+import '../widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
-  static const routeName = 'CartScreen';
+  static const routeName = '/cart';
 
   @override
   Widget build(BuildContext context) {
-    final myCart = Provider.of<Cart>(context);
-    final orders = Provider.of<Orders>(context);
+    final cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: Text('Your Cart'),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Card(
-              margin: EdgeInsets.all(16.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Total',
+      body: Column(
+        children: <Widget>[
+          Card(
+            margin: EdgeInsets.all(15),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Total',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Spacer(),
+                  Chip(
+                    label: Text(
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18.0),
-                    ),
-                    SizedBox(width: 8.0),
-                    Spacer(),
-                    Chip(
-                      label: Text(
-                        '${myCart.getTotalMoney.toStringAsFixed(2)} \$',
-                        style: TextStyle(color: Colors.white),
+                        color: Theme
+                            .of(context)
+                            .primaryTextTheme
+                            .title
+                            .color,
                       ),
-                      backgroundColor: Theme.of(context).primaryColor,
                     ),
-                    FlatButton(
-                      child: Text('Order Now'),
-                      textColor: Theme.of(context).accentColor,
-                      onPressed: () {
-                        if (myCart.cartItems.length != 0) {
-                          orders.addOrder(
-                              myCart.cartItems.values.toList(),
-                              myCart.getTotalMoney);
-                          Navigator.of(context).pushNamed(OrderScreen
-                              .routeName);
-                          myCart.clearCart();
-                        } else {
-                          print('No Items');
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                    backgroundColor: Theme
+                        .of(context)
+                        .primaryColor,
+                  ),
+                  OrderButton(cart: cart)
+                ],
               ),
             ),
-            SizedBox(height: 8.0),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => CartWidget(
-                    id: myCart.cartItems.values.toList()[index].id,
-                    productID: myCart.cartItems.keys.toList()[index],
-                    price: myCart.cartItems.values.toList()[index].price,
-                    quantity: myCart.cartItems.values.toList()[index].quantity,
-                    name: myCart.cartItems.values.toList()[index].title),
-                itemCount: myCart.getItemCount,
-              ),
+          ),
+          SizedBox(height: 10),
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, i) =>
+                  CartItem(
+                    cart.items.values.toList()[i].id,
+                    cart.items.keys.toList()[i],
+                    cart.items.values.toList()[i].price,
+                    cart.items.values.toList()[i].quantity,
+                    cart.items.values.toList()[i].title,
+                  ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      child: _isLoading ? CircularProgressIndicator() : Text('ORDER NOW'),
+      onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+        setState(() {
+          _isLoading = true;
+        });
+        await Provider.of<Orders>(context, listen: false).addOrder(
+          widget.cart.items.values.toList(),
+          widget.cart.totalAmount,
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        widget.cart.clear();
+      },
+      textColor: Theme
+          .of(context)
+          .primaryColor,
     );
   }
 }

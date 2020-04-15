@@ -1,60 +1,62 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopflutterapp/providers/products.dart';
 
-///****************************************************
-///*** Created by Fady Fouad on 29-Mar-20 at 16:01.***
-///****************************************************
+import '../providers/products.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
-  static const routeName = 'ProductDetails';
+class ProductDetailScreen extends StatelessWidget {
+  // final String title;
+  // final double price;
+
+  // ProductDetailScreen(this.title, this.price);
+  static const routeName = '/product-detail';
 
   @override
   Widget build(BuildContext context) {
-    String id = ModalRoute.of(context).settings.arguments as String;
-    final products = Provider.of<Products>(context);
-    final selectedProduct = products.getProduct(id);
-    return ChangeNotifierProvider(
-      create: (BuildContext context) {
-        return Products();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(selectedProduct.title),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 256.0,
-                width: double.infinity,
-                margin: EdgeInsets.only(
-                    bottom: 16.0, left: 16.0, right: 16.0, top: 4),
-                child: Hero(
-                  tag: selectedProduct.id,
-                  child: Image.network(
-                    selectedProduct.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+    final productId =
+    ModalRoute
+        .of(context)
+        .settings
+        .arguments as String; // is the id!
+    final loadedProduct = Provider.of<Products>(
+      context,
+      listen: false,
+    ).findById(productId);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(loadedProduct.title),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                loadedProduct.imageUrl,
+                fit: BoxFit.cover,
               ),
-              SizedBox(
-                height: 8.0,
+            ),
+            SizedBox(height: 10),
+            Text(
+              '\$${loadedProduct.price}',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
               ),
-              Text(
-                '${selectedProduct.price} \$',
-                style: TextStyle(color: Colors.grey, fontSize: 18.0),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                selectedProduct.description,
-                softWrap: true,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: double.infinity,
+              child: Text(
+                loadedProduct.description,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                softWrap: true,
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
