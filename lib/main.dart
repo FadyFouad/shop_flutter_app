@@ -38,9 +38,10 @@ class MyApp extends StatelessWidget {
                 'main': (_) =>
                 authentication.isAuthenticated
                     ? ProductOverViewScreen(title: 'Shop')
-                    : AuthScreen(),
+                    : AuthScreen(
+                  title: (authentication.isAuthenticated).toString(),),
                 ProductOverViewScreen.routeName: (context) =>
-                    ProductOverViewScreen(),
+                    ProductOverViewScreen(title: 'Shop',),
                 ProductDetailsScreen.routeName: (context) =>
                     ProductDetailsScreen(),
                 CartScreen.routeName: (context) => CartScreen(),

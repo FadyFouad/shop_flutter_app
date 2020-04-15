@@ -15,9 +15,10 @@ class Authentication with ChangeNotifier {
   static const API_KEY = 'AIzaSyAQ6wgW6PCdM44Z_UbhCyX546lZDI4ZJMw';
 
   bool get isAuthenticated {
-    print('isAuthenticated ${token != null} token = $token');
     print(
-        'isAuthenticated : _token $_token _expiryDate $_expiryDate _userId $_userId');
+        'isAuthenticated : _token = ${_token != null
+            ? 'Not Null'
+            : 'Null'} _expiryDate = $_expiryDate _userId = $_userId');
     return token != null;
   }
 
@@ -49,7 +50,9 @@ class Authentication with ChangeNotifier {
       _expiryDate =
           DateTime.now().add(Duration(seconds: int.parse(result['expiresIn'])));
       print(
-          'signIn : _token $_token _expiryDate $_expiryDate _userId $_userId');
+          'signIn : _token = ${_token != null
+              ? 'Not Null'
+              : 'Null'} _expiryDate = $_expiryDate _userId = $_userId');
       notifyListeners();
     } catch (e, stack) {
       print(stack);
@@ -65,7 +68,8 @@ class Authentication with ChangeNotifier {
 
   Future<void> signIn({String eMail, String passWord}) async {
     const url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
+//        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY';
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=$API_KEY';
     return _authenticate(eMail: eMail, passWord: passWord, url: url);
   }
 }

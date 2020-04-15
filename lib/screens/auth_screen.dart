@@ -9,6 +9,9 @@ enum AuthMode { SignUp, LogIn }
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
+  final title;
+
+  const AuthScreen({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,7 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'Shop App',
+                        title,
                         style: TextStyle(
                           color: Colors.amber,
                           fontSize: 36,
